@@ -1,28 +1,27 @@
 import { Server } from "socket.io";
 
 export default function handler(req, res) {
-  if (res.socket.server.io) {
-    console.log("Socket.io server already running");
-    res.end();
-    return;
+  if (!res.socket.server.io) {
+    const io = new Server(res.socket.server, {
+      path: "/api/socket",
+    });
+    res.socket.server.io = io;
+
+    io.on("connection", (socket) => {
+      console.log("A user connected");
+
+      socket.on("message", (msg) => {
+        socket.broadcast.emit("message", msg);
+      });
+
+      socket.on("disconnect", () => {
+        console.log("User disconnected");
+      });
+    });
+
+    console.log("Socket.IO server started");
+  } else {
+    console.log("Socket.IO server already running");
   }
-
-  const io = new Server(res.socket.server);
-  res.socket.server.io = io;
-
-  io.on("connection", (socket) => {
-    console.log("A user connected");
-
-    socket.on("disconnect", () => {
-      console.log("User disconnected");
-    });
-
-    socket.on("message", (msg) => {
-      console.log("Message received: " + msg);
-      socket.broadcast.emit("message", msg);
-    });
-  });
-
-  console.log("Setting up Socket.io");
   res.end();
 }
