@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
+import { Message } from "./types";
 
 // 소켓 인스턴스를 클라이언트 외부에 정의하여 재사용
 let socket;
-const user = new Date();
+const user: Date = new Date();
+
 export default function Home() {
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [inputText, setInputText] = useState<string>("");
+  const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
     // Socket.IO 클라이언트 초기화
@@ -27,26 +29,25 @@ export default function Home() {
       socket = io();
 
       // 메시지 리스너 등록
-      socket.on("message", (msg) => {
+      socket.on("message", (msg: Message) => {
         console.log("Message received:", msg); // 디버깅용
-        setMessages((prevMessages) => [...prevMessages, msg]);
+        setMessages((prevMessages: Message[]) => [...prevMessages, msg]);
       });
     }
   };
 
   const sendMessage = () => {
-    console.log(message);
-    if (socket && message.trim()) {
+    if (socket && inputText.trim()) {
       // 자신의 메시지를 화면에 즉시 추가
-      setMessages((prevMessages) => [
+      setMessages((prevMessages: Message[]) => [
         ...prevMessages,
-        { text: message, sender: user },
+        { text: inputText, sender: user },
       ]);
 
       // 서버로 메시지 전송
-      console.log("Sending message:", message); // 디버깅용
-      socket.emit("message", { text: message, sender: user });
-      setMessage("");
+      console.log("Sending message:", inputText); // 디버깅용
+      socket.emit("message", { text: inputText, sender: user });
+      setInputText("");
     }
   };
 
@@ -77,8 +78,8 @@ export default function Home() {
         <input
           className="pl-[20px] text-black text-[14px] focus:none rounded-l-md w-full"
           type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
           placeholder="메세지를 입력해주세요."
         />
         <button
