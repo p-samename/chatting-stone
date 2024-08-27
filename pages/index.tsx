@@ -51,40 +51,43 @@ export default function Home() {
   };
 
   return (
-    <div>
-      <h1>Socket.IO Chat</h1>
+    <div className="p-[20px]">
+      <h1 className="font-bold">실시간 채팅</h1>
       <div
+        className="p-4 mt-4 h-[500px] rounded-md"
         style={{
           border: "1px solid #ddd",
-          padding: "10px",
-          height: "300px",
-          overflowY: "scroll",
+          overflowY: "auto",
         }}
       >
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            style={{
-              textAlign: msg.sender === user ? "right" : "left",
-              padding: "5px",
-              margin: "5px",
-              borderRadius: "5px",
-            }}
-          >
-            {msg.text}
-          </div>
-        ))}
+        <ul className="flex flex-col gap-[8px]">
+          {messages.map((msg, index) => (
+            <li
+              className={`p-[4px_8px] bg-zinc-500 rounded-lg w-max ${
+                msg.sender === user ? "ml-auto" : "mr-auto"
+              }`}
+              key={index}
+            >
+              {msg.text}
+            </li>
+          ))}
+        </ul>
       </div>
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Enter your message"
-        style={{ width: "80%", padding: "10px", margin: "10px 0" }}
-      />
-      <button onClick={sendMessage} style={{ padding: "10px 20px" }}>
-        Send
-      </button>
+      <div className="flex justify-center h-[50px] my-[12px]">
+        <input
+          className="pl-[20px] text-black text-[14px] focus:none rounded-l-md w-full"
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="메세지를 입력해주세요."
+        />
+        <button
+          className="text-[14px] w-[100px] bg-slate-400 rounded-r-md"
+          onClick={sendMessage}
+        >
+          전송
+        </button>
+      </div>
     </div>
   );
 }
