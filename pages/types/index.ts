@@ -3,4 +3,4 @@ export interface Message {
   sender: UserId; // sender가 Date 타입인 경우
 }
 
-export type UserId = Date;
+export type UserId = number;
