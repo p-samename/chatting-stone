@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
-import { Message } from "./types";
+import { Message, UserId } from "./types";
 
 // 소켓 인스턴스를 클라이언트 외부에 정의하여 재사용
 let socket;
-const user: Date = new Date();
+const user: UserId = new Date();
 
 export default function Home() {
   const [inputText, setInputText] = useState<string>("");
