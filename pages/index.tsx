@@ -13,14 +13,6 @@ export default function Home() {
   useEffect(() => {
     // Socket.IO 클라이언트 초기화
     socketInitializer();
-
-    // 컴포넌트 언마운트 시 클린업
-    return () => {
-      if (socket) {
-        socket.off("message");
-        socket.disconnect(); // 소켓 연결 종료
-      }
-    };
   }, []);
 
   const socketInitializer = async () => {
@@ -62,7 +54,7 @@ export default function Home() {
         }}
       >
         <ul className="flex flex-col gap-[8px]">
-          {messages.map((msg, index) => (
+          {messages.map((msg: Message, index: number) => (
             <li
               className={`p-[4px_8px] bg-zinc-500 rounded-lg w-max ${
                 msg.sender === user ? "ml-auto" : "mr-auto"
